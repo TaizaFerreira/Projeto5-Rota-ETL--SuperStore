@@ -15,9 +15,15 @@ O projeto seguiu uma abordagem ágil, com entregas iterativas e foco na clareza,
 
 ### 5.FERRAMENTAS E LINGUAGENS
 
-![Descrição da imagem](https://user-images.githubusercontent.com/.../notion.png)
-![Descrição da imagem](https://user-images.githubusercontent.com/.../download.png)
+BigQuery (Modelagem de dados)
 
+Notion (Organização e documentação)
+
+IA Chat GPT e Gemini (Ferramentas de apoio)
+
+LucidApp (Criação de diagrama e fluxograma)
+
+Google Documentos (Criação de relatório)
 
 ### 6. BASE DE DADOS
    
@@ -36,7 +42,7 @@ Informações temporais (datas, semanas, ano)
 
 A estrutura variada da base permitiu a extração de insights estratégicos com qualidade.
 
-### 6. PROCESSAMENTO E PREPARAÇÃO DOS DADOS
+### 7. PROCESSAMENTO E PREPARAÇÃO DOS DADOS
    
 Foram realizadas as seguintes análises:
 
@@ -55,31 +61,31 @@ Numéricas: Validação de tipos e faixas.
 Tipos de dados: Todos os campos foram ajustados corretamente entre texto, números e datas.
 
 
-### 7. INTEGRAÇÃO COM FONTES EXTERNAS
+### 8. INTEGRAÇÃO COM FONTES EXTERNAS
    
 Realizou-se uma integração via web scraping com dados da Wikipédia (lista das maiores empresas por receita), cruzando o setor e país com os dados da Super Store. Isso permitiu identificar potenciais concorrentes e contextos de atuação global.
 
-### 8. ESTRUTURA DE DADOS (MODELO ESTRELA)
+### 9. ESTRUTURA DE DADOS (MODELO ESTRELA)
    
 Foi desenvolvido um modelo estrela com:
 
-1 tabela fato: fato_vendas, contendo dados quantitativos (vendas, lucro, quantidade)
+*1 tabela fato: fato_vendas, contendo dados quantitativos (vendas, lucro, quantidade)*
 
 
 8 tabelas de dimensões: contendo atributos descritivos como:
 
 
-dim_regiao, dim_mercado, dim_categoria, dim_order_priority, dim_cliente, dim_produto, dim_ship_mode, dim_segmento
+*dim_regiao, dim_mercado, dim_categoria, dim_order_priority, dim_cliente, dim_produto, dim_ship_mode, dim_segmento*
 
 
 Cada dimensão possui um identificador único (ID), utilizado na tabela fato como chave estrangeira. Isso garante a integridade referencial e otimiza as consultas analíticas.
 
 
-### 9. VERIFICAÇÃO DE RELACIONAMENTOS
+### 10. VERIFICAÇÃO DE RELACIONAMENTOS
    
 Foram realizados JOINs no BigQuery entre a tabela fato e todas as tabelas de dimensão. O resultado confirmou que todos os relacionamentos estavam funcionando corretamente, sem retornos nulos, validando a estrutura e a integridade do modelo de dados.
 
-### 10. PIPELINE DE ATUALIZAÇÃO DE DADOS
+### 11. PIPELINE DE ATUALIZAÇÃO DE DADOS
     
 O pipeline foi planejado em três etapas:
 
@@ -94,11 +100,11 @@ Atualização da tabela fato (fato_vendas)
 
 A ordem respeita as dependências entre tabelas, garantindo que as referências estejam disponíveis antes da carga na fato. Foi considerada a possibilidade de atualizações incrementais para otimizar desempenho e evitar recarregamentos completos.
 
-### 11. CONCLUSÃO
+### 12. CONCLUSÃO
     
 O projeto resultou em uma base de dados analítica robusta, bem estruturada e pronta para suportar a geração de dashboards, relatórios e análises estratégicas. A aplicação de boas práticas de modelagem dimensional, somada à validação dos relacionamentos e à organização do pipeline, garante qualidade, escalabilidade e confiabilidade dos dados.
 
-### 12. RECOMENDAÇÕES FINAIS
+### 13. RECOMENDAÇÕES FINAIS
     
 Automatizar o pipeline ETL com ferramentas como Airflow ou Cloud Composer.
 
@@ -110,9 +116,6 @@ Documentar todo o modelo e os fluxos de atualização.
 
 
 Expandir indicadores com novas variáveis de negócio.
-
-
-Otimizar performance com particionamento e clustering no BigQuery.
 
 
 Capacitar a equipe com treinamentos em BI e engenharia de dados.
