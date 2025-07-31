@@ -25,6 +25,10 @@ LucidApp (Criação de diagrama e fluxograma)
 
 Google Documentos (Criação de relatório)
 
+SQL
+
+Python
+
 ### 6. BASE DE DADOS
    
 Utilizamos a base superstore, com 51.290 registros. A tabela contém dados de vendas detalhadas, incluindo:
