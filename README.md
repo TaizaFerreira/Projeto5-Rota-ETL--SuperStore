@@ -1,3 +1,6 @@
+#Projeto5 Rota ETL SuperStore
+
+
 1. OBJETIVO
 Este projeto teve como objetivo estruturar um processo completo de ETL (Extração, Transformação e Carga) e modelagem dimensional no BigQuery, com base nos dados da Super Store. O foco foi organizar a base de dados de forma eficiente para análises de vendas, clientes, produtos e mercados, viabilizando uma visão estratégica dos dados por meio de um modelo estrela (star schema).
 
