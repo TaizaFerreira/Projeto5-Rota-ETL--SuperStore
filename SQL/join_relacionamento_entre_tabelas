@@ -1,0 +1,40 @@
+-- Consulta relacionando a tabela fato_vendas com as tabelas dimensão
+
+SELECT 
+  f.*,
+  r.region AS nome_regiao,
+  m.market AS nome_mercado,
+  c.category AS nome_categoria,
+  c.sub_category AS nome_subcategoria,
+  o.order_priority AS prioridade_pedido,
+  cli.customer_name AS nome_cliente,
+  pr.product_name AS nome_produto,
+  s.ship_mode AS tipo_envio,
+  seg.segment AS nome_segmento
+FROM 
+  `projeto5-etl-superstore.Super_store_ETL.fato_vendas` AS f
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_regiao` AS r
+  ON f.region_id = r.region_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_mercado` AS m
+  ON f.market_id = m.market_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_categoria` AS c
+  ON f.category_id = c.category_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_order_priority` AS o
+  ON f.order_priority_id = o.order_priority_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_cliente` AS cli
+  ON f.customer_id = cli.customer_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_produto` AS pr
+  ON f.product_id = pr.product_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_ship_mode` AS s
+  ON f.ship_mode_id = s.ship_mode_id
+JOIN 
+  `projeto5-etl-superstore.Super_store_ETL.dim_segmento` AS seg
+  ON f.segment_id = seg.segment_id
+LIMIT 100;

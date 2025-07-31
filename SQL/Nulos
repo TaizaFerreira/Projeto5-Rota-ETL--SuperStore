@@ -1,0 +1,18 @@
+--Verificação de Nulos
+SELECT
+  COUNT(*) AS total_registros,
+
+  COUNTIF(order_id IS NULL) AS nulos_order_id,
+  COUNTIF(customer_ID IS NULL) AS nulos_customer_ID,
+  COUNTIF(product_id IS NULL) AS nulos_product_id,
+  COUNTIF(order_date IS NULL) AS nulos_order_date,
+  COUNTIF(ship_date IS NULL) AS nulos_ship_date,
+  COUNTIF(ship_mode IS NULL) AS nulos_ship_mode,
+  COUNTIF(order_priority IS NULL) AS nulos_order_priority,
+  COUNTIF(sales IS NULL) AS nulos_sales,
+  COUNTIF(quantity IS NULL) AS nulos_quantity,
+  COUNTIF(profit IS NULL) AS nulos_profit,
+  COUNTIF(discount IS NULL) AS nulos_discount,
+  COUNTIF(shipping_cost IS NULL) AS nulos_shipping_cost
+
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;

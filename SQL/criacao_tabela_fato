@@ -1,0 +1,53 @@
+-- fato_vendas
+
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.fato_vendas` AS
+SELECT
+  GENERATE_UUID() AS fato_id,
+  f.order_id,
+  SAFE_CAST(f.order_date AS DATE) AS order_date,
+  SAFE_CAST(f.ship_date AS DATE) AS ship_date,
+  c.customer_id,
+  p.product_id,
+  sm.ship_mode_id,
+  op.order_priority_id,
+  s.segment_id,
+  r.region_id,
+  m.market_id,
+  cat.category_id,
+  f.city,
+  f.state,
+  f.country,
+  f.sales,
+  f.quantity,
+  f.discount,
+  f.profit,
+  f.shipping_cost,
+  EXTRACT(WEEK FROM SAFE_CAST(f.order_date AS DATE)) AS weeknum,
+  EXTRACT(YEAR FROM SAFE_CAST(f.order_date AS DATE)) AS year
+
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa` f
+
+-- JOINS COM DIMENSÕES
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_cliente` c
+  ON f.customer_ID = c.customer_id
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_produto` p
+  ON f.product_id = p.product_id
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_ship_mode` sm
+  ON f.ship_mode = sm.ship_mode
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_order_priority` op
+  ON f.order_priority = op.order_priority
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_segmento` s
+  ON f.segment = s.segment
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_regiao` r
+  ON f.region = r.region
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_mercado` m
+  ON f.market = m.market AND f.market2 = m.market2
+
+LEFT JOIN `projeto5-etl-superstore.Super_store_ETL.dim_categoria` cat
+  ON f.category = cat.category AND f.sub_category = cat.sub_category;

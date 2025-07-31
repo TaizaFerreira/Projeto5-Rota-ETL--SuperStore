@@ -1,0 +1,38 @@
+
+-- Padronização de variáveis categóricas e tipo de dados + criação tabela superstore_limpa
+
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.superstore_limpa` AS
+SELECT
+  -- Variáveis categóricas padronizadas
+  TRIM(LOWER(category)) AS category,
+  TRIM(LOWER(city)) AS city,
+  TRIM(LOWER(country)) AS country,
+  customer_ID,
+  TRIM(LOWER(customer_name)) AS customer_name,
+  TRIM(LOWER(market)) AS market,
+  TRIM(LOWER(order_priority)) AS order_priority,
+  TRIM(LOWER(product_name)) AS product_name,
+  TRIM(LOWER(region)) AS region,
+  TRIM(LOWER(segment)) AS segment,
+  TRIM(LOWER(ship_mode)) AS ship_mode,
+  TRIM(LOWER(state)) AS state,
+  TRIM(LOWER(sub_category)) AS sub_category,
+  TRIM(LOWER(market2)) AS market2,
+  unknown,  -- Mantido como está por ora
+
+  -- Datas convertidas
+  SAFE_CAST(order_date AS DATE) AS order_date,
+  SAFE_CAST(ship_date AS DATE) AS ship_date,
+
+  -- Numéricas e identificadores (mantidas)
+  order_id,
+  product_id,
+  profit,
+  quantity,
+  row_id,
+  sales,
+  shipping_cost,
+  discount,
+  year,
+  weeknum
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;

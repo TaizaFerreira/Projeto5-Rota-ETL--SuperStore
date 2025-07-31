@@ -1,0 +1,433 @@
+#instalação da biblioteca Pandas
+pip install requests beautifulsoup4 pandas
+
+
+
+
+#importando as bibliotecas requests, BeautifulSoup e pesquisa dados wikipédia
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# 1. URL da nova página e headers para simular um navegador
+url = "https://pt.wikipedia.org/wiki/Lista_das_maiores_empresas_do_mundo_por_receita"
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+
+# 2. Fazer o download do conteúdo da página
+response = requests.get(url, headers=headers)
+response.raise_for_status() # Levanta um erro para códigos de status HTTP ruins
+
+# 3. "Ler" o conteúdo HTML com o Beautiful Soup
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# 4. Encontrar a tabela desejada
+# Tentando encontrar a tabela principal, que geralmente tem classes como 'wikitable'
+# Pode ser necessário ajustar esta linha dependendo da estrutura da página
+table = soup.find('table', {'class': 'wikitable'})
+
+# Se a primeira tentativa não funcionar, tentar outras classes comuns ou métodos
+if table is None:
+    table = soup.find('table', {'class': 'wikitable sortable'})
+
+# 5. Extrair os dados da tabela usando Pandas
+# Verificar se a tabela foi encontrada antes de tentar ler com pandas
+if table is not None:
+    # A função read_html do pandas pode extrair tabelas de um HTML diretamente
+    # Ela retorna uma lista de todas as tabelas encontradas
+    dfs = pd.read_html(str(table))
+
+    # Pega a primeira (e geralmente única) tabela da nossa seleção 'table'
+    df_empresas = dfs[0]
+
+    # 6. Ver os resultados
+    print("Tabela extraída com sucesso:")
+    display(df_empresas.head())
+
+    # Opcional: Salvar os dados em um arquivo CSV
+    # df_empresas.to_csv('maiores_empresas.csv', index=False)
+    # print("\nDados salvos no arquivo 'maiores_empresas.csv'")
+else:
+    print("Erro: Nenhuma tabela com a classe 'wikitable' ou 'wikitable sortable' foi encontrada na página.")
+    print("Por favor, inspecione a página para encontrar a classe correta da tabela.")
+
+
+
+
+
+
+#Exibir informações sobre o DataFrame df_empresas, incluindo tipos de dados
+display(df_empresas.info())
+
+
+
+
+
+#Buscando novamente a tabela df_empresas para ver se o País aparece nos dados
+# 1. Encontrar a tabela novamente (já fizemos isso antes, mas repetimos para clareza)
+# A tabela principal geralmente tem classes como 'wikitable'
+table = soup.find('table', {'class': 'wikitable'})
+
+# Se a primeira tentativa não funcionar, tentar outras classes comuns ou métodos
+if table is None:
+    table = soup.find('table', {'class': 'wikitable sortable'})
+
+# 2. Extrair os países manualmente, se a tabela for encontrada
+paises = []
+if table is not None:
+    # Encontrar todas as linhas da tabela (<tr>)
+    rows = table.find_all('tr')
+
+    # Iterar sobre as linhas (ignorando a primeira linha, que geralmente é o cabeçalho)
+    for row in rows[1:]:
+        # Encontrar todas as células de dados (<td>) em cada linha
+        cells = row.find_all('td')
+
+        # Verificar se há células suficientes para conter os dados que queremos
+        # A coluna 'País' parece ser a 7ª coluna (índice 6) com base na tabela original
+        # Vamos ajustar o índice conforme necessário ao inspecionar a página
+        # Se a estrutura da tabela variar, pode ser necessário inspecionar a página HTML
+        if len(cells) > 6: # Ajuste este número se a coluna 'País' tiver um índice diferente
+            pais_cell = cells[6] # Índice 6 para a 7ª coluna ('País')
+            pais = pais_cell.get_text(strip=True)
+            paises.append(pais)
+        else:
+            paises.append(None) # Adiciona None se a linha não tiver dados suficientes
+
+# 3. Adicionar a lista de países extraída manualmente ao DataFrame
+if table is not None and len(paises) == len(df_empresas):
+    df_empresas['País Extraído'] = paises
+    print("\nColuna 'País Extraído' adicionada ao DataFrame.")
+    display(df_empresas.head())
+else:
+    print("\nErro: Não foi possível extrair a coluna 'País' manualmente ou o número de países extraídos não corresponde ao número de linhas no DataFrame.")
+
+
+
+
+
+#Contagem valores único
+# Exibir os valores únicos e suas contagens na coluna 'Sede'
+print("Valores únicos e contagem na coluna 'Sede':")
+display(df_empresas['Sede'].value_counts())
+
+
+
+
+
+#Dicionário para mapear  coluna sede para o países
+sede_para_pais = {
+    'Bentonville (Arkansas)': 'United States',
+    'Pequim': 'China',
+    'Haia': 'Países Baixos', # Ou Netherlands
+    'Irving (Texas)': 'United States',
+    'Wolfsburg': 'Germany',
+    'Toyota (Aichi)': 'Japan',
+    'Cupertino': 'United States',
+    'Londres': 'United Kingdom',
+    'Omaha (Nebraska)': 'United States',
+    'San Francisco': 'United States',
+    'Suwon': 'South Korea',
+    'Baar': 'Switzerland',
+    'Courbevoie': 'France',
+    'Houston': 'United States',
+    'Tóquio': 'Japan',
+    'Stuttgart': 'Germany',
+    'Detroit': 'United States',
+    'Boston': 'United States',
+    'Turim': 'Italy',
+    'Munique': 'Germany',
+    'Dearborn (Michigan)': 'United States',
+    'Rio de Janeiro': 'Brazil',
+    'Moscou': 'Russia',
+    'Tokyo': 'Japan',
+    'Woonsocket (Rhode Island)': 'United States',
+    'San Ramon (Califórnia)': 'United States',
+    'Düsseldorf': 'Germany',
+    'Taiwan': 'Taiwan', # Ou China, dependendo do contexto desejado
+    'Roma': 'Italy',
+    'Dallas': 'United States',
+    'San Antonio, Texas': 'United States',
+    'Minnetonka (Minnesota)': 'United States',
+    'Caracas': 'Venezuela',
+    'Lucerna': 'Switzerland',
+    'Nova York': 'United States',
+    'Wayzata (Minnesota)': 'United States',
+    'Chesterbrook (Pensilvânia)': 'United States',
+    'Wichita (Kansas)': 'United States',
+    'Issaquah': 'United States',
+    'Palo Alto': 'United States',
+    'Mumbai': 'India',
+    # Adicione mais mapeamentos aqui conforme necessário
+}
+
+# Você precisará preencher o dicionário 'sede_para_pais' com os mapeamentos corretos para todas as sedes.
+
+# Depois de preencher o dicionário, o próximo passo será aplicar este mapeamento ao DataFrame.
+
+
+
+
+
+#Aplicando mapeamento para criar a coluna País
+# Aplicar o mapeamento da sede para criar a nova coluna 'País Final'
+# Certifique-se de que o dicionário sede_para_pais foi definido na célula anterior
+df_empresas['País Final'] = df_empresas['Sede'].map(sede_para_pais)
+
+# Exibir as primeiras linhas do DataFrame com a nova coluna
+print("\nDataFrame com a nova coluna 'País Final':")
+display(df_empresas.head())
+
+# Verificar quantos valores foram mapeados (quantos não são None/NaN)
+print("\nContagem de valores não nulos na coluna 'País Final':")
+display(df_empresas['País Final'].count())
+
+# Opcional: Verificar os valores únicos na nova coluna 'País Final' para confirmar
+print("\nValores únicos na coluna 'País Final':")
+display(df_empresas['País Final'].value_counts())
+
+
+
+
+
+#Carregando tabela superstore para comparação de dados
+import pandas as pd
+
+df_superstore = pd.read_csv('superstore.csv')
+display(df_superstore.head())
+
+
+
+
+
+#Exibindo dados da tabela superstore
+#Exiba o cabeçalho e as informações sobre o Superstore DataFrame para entender sua estrutura e tipos de dados.
+display(df_superstore.head())
+display(df_superstore.info())
+
+
+
+
+
+#Tratamento das colunas numéricas e alteração do tipo de dado para posteriormente uso para integração dos dado
+# Limpeza das colunas numéricas removendo caracteres não numéricos e convertendo-os para float, descartando colunas irrelevantes e, em seguida, exibindo o cabeçalho e as informações do DataFrame limpo.
+# Clean 'Receita (bilhões de USD)' column
+df_empresas['Receita (bilhões de USD)'] = df_empresas['Receita (bilhões de USD)'].astype(str).str.replace('$', '', regex=False).str.replace(',', '.', regex=False)
+df_empresas['Receita (bilhões de USD)'] = pd.to_numeric(df_empresas['Receita (bilhões de USD)'])
+
+# Clean 'Crescimento da receita' column
+df_empresas['Crescimento da receita'] = df_empresas['Crescimento da receita'].astype(str).str.replace('%', '', regex=False).str.replace(',', '.', regex=False).str.replace('..', '.', regex=False)
+df_empresas['Crescimento da receita'] = pd.to_numeric(df_empresas['Crescimento da receita'])
+
+# Clean 'Empregados' column
+df_empresas['Empregados'] = df_empresas['Empregados'].astype(str).str.replace('.', '', regex=False)
+df_empresas['Empregados'] = pd.to_numeric(df_empresas['Empregados'])
+
+
+# Drop irrelevant columns
+# Check existing columns before dropping
+columns_to_drop = ['País', 'País Extraído', 'Ref.(s)']
+existing_columns_to_drop = [col for col in columns_to_drop if col in df_empresas.columns]
+df_empresas = df_empresas.drop(columns=existing_columns_to_drop)
+
+
+# Display the head and information of the transformed DataFrame
+display(df_empresas.head())
+display(df_empresas.info())
+
+
+
+
+
+#Exibição da coluna receita
+#Exibição das informações e uma amostra da coluna "Receita (bilhões de USD)
+display(df_empresas.info())
+display(df_empresas['Receita (bilhões de USD)'].head())
+
+
+
+
+
+#Alteração do tipo de dado das colunas "Crescimento da receita" e "Empregados" de "objeto" para “float” e limpeza da tabela mais exclusão de colunas irrelevantes para a análise ("País", "País Extraído", "Ref.(s).
+# Clean 'Crescimento da receita' column - fix for '..'
+df_empresas['Crescimento da receita'] = df_empresas['Crescimento da receita'].astype(str).str.replace('%', '', regex=False).str.replace(',', '.', regex=False).str.replace('..', '.', regex=False)
+df_empresas['Crescimento da receita'] = pd.to_numeric(df_empresas['Crescimento da receita'])
+
+# Clean 'Empregados' column
+df_empresas['Empregados'] = df_empresas['Empregados'].astype(str).str.replace('.', '', regex=False)
+df_empresas['Empregados'] = pd.to_numeric(df_empresas['Empregados'])
+
+
+# Drop irrelevant columns
+df_empresas = df_empresas.drop(columns=['País', 'País Extraído', 'Ref.(s)'])
+
+
+# Display the head and information of the transformed DataFrame
+display(df_empresas.head())
+display(df_empresas.info())
+
+
+
+
+
+
+#Identificação das colunas relevantes para comparação e analise os valores exclusivos nas colunas do setor de ambos os DataFrames para entender as diferentes categorias presentes.
+
+print("Unique values in 'Indústria' from df_empresas:")
+display(df_empresas['Indústria'].value_counts())
+
+print("\nUnique values in 'category' from df_superstore:")
+display(df_superstore['category'].value_counts())
+
+print("\nUnique values in 'sub_category' from df_superstore:")
+display(df_superstore['sub_category'].value_counts())
+
+
+
+
+
+#Determinando a estratégia para identificar concorrentes potenciais com base em setores sobrepostos e filtrando os DataFrames para criar um novo DataFrame contendo informações sobre concorrentes potenciais.
+
+potential_competitor_industries = ['Eletrônicos', 'Varejo']
+df_competitors = df_empresas[df_empresas['Indústria'].isin(potential_competitor_industries)].copy()
+
+# Display the resulting DataFrame
+print("\nPotential Competitors based on Industry:")
+display(df_competitors)
+
+
+
+
+#Analisar o DataFrame df_competitors para entender a distribuição das empresas entre os setores e, em seguida, comparar esses setores com as categorias e subcategorias da Superstore para encontrar sobreposições. Após identificar as sobreposições, filtrar as principais empresas em setores relevantes a partir do df_competitors e resuma as descobertas.
+
+print("Distribution of companies in df_competitors by Industry:")
+display(df_competitors['Indústria'].value_counts())
+
+# 2. Compare the industries in df_competitors with the categories and sub-categories in df_superstore
+print("\nComparing df_competitors industries with df_superstore categories and sub-categories:")
+print(f"Industries in df_competitors: {df_competitors['Indústria'].unique()}")
+print(f"Categories in df_superstore: {df_superstore['category'].unique()}")
+print(f"Sub-categories in df_superstore: {df_superstore['sub_category'].unique()}")
+
+# Identify overlapping industries based on the comparison.
+# 'Eletrônicos' from df_competitors aligns with 'Technology' from df_superstore.
+# 'Varejo' from df_competitors aligns with 'Office Supplies' and 'Furniture' from df_superstore as these are retail categories.
+relevant_industries_for_superstore = ['Eletrônicos', 'Varejo']
+
+# 3. Identify the top companies within df_competitors that operate in industries relevant to Superstore's business.
+# We will consider the top companies based on 'Classificação' (which is based on Revenue).
+# Let's look at the top 10 companies in df_competitors that are in the relevant industries.
+top_competitors_in_relevant_industries = df_competitors[
+    df_competitors['Indústria'].isin(relevant_industries_for_superstore)
+].sort_values(by='Classificação').head(10)
+
+print("\nTop 10 Potential Competitors in Industries relevant to Superstore:")
+display(top_competitors_in_relevant_industries)
+
+# 4. Summarize the findings, highlighting the key industries and top companies that are potential competitors to Superstore.
+print("\nSummary of Potential Competitors for Superstore:")
+print(f"Superstore operates in the following categories: {df_superstore['category'].unique()}")
+print("Potential competitor industries identified from the Wikipedia data are 'Eletrônicos' and 'Varejo'.")
+print("\nTop companies in these relevant industries (based on global revenue ranking) are:")
+for index, row in top_competitors_in_relevant_industries.iterrows():
+    print(f"- {row['Nome']} ({row['Indústria']}) - Global Classification: {row['Classificação']}")
+
+
+
+#Refinar a identificação de potenciais concorrentes considerando a sobreposição de produtos, vendas por ano e presença geográfica.
+
+print("Superstore Product Categories:")
+display(df_superstore['category'].value_counts())
+
+print("\nSuperstore Product Subcategories:")
+display(df_superstore['sub_category'].value_counts())
+
+# Analyze industries of potential competitors
+print("\nPotential Competitors Industries:")
+display(df_competitors['Indústria'].value_counts())
+
+# Compare Superstore categories/subcategories with potential competitor industries to find specific overlaps.
+# 'Technology' in Superstore aligns with 'Eletrônicos' in potential competitors.
+# 'Office Supplies' and 'Furniture' in Superstore might align with 'Varejo' depending on the specific products sold by the retail companies.
+
+
+
+
+#Analise as vendas da Superstore por ano e país para entender seu desempenho e foco geográfico. Em seguida, compare a presença geográfica da Superstore (países onde opera) com os países dos concorrentes potenciais identificados a partir dos dados da Wikipédia para encontrar sobreposições geográficas.
+
+print("\nSuperstore Sales by Year:")
+display(df_superstore.groupby('year')['sales'].sum())
+
+# Analyze Superstore sales by country
+print("\nSuperstore Sales by Country:")
+display(df_superstore.groupby('country')['sales'].sum().sort_values(ascending=False))
+
+# Analyze geographical presence of potential competitors
+print("\nPotential Competitors Geographical Presence (Countries):")
+display(df_competitors['País Final'].value_counts())
+
+# Compare geographical presence of Superstore and potential competitors
+superstore_countries = df_superstore['country'].unique()
+competitor_countries = df_competitors['País Final'].unique()
+
+overlapping_countries = list(set(superstore_countries) & set(competitor_countries))
+
+print(f"\nOverlapping Countries between Superstore and Potential Competitors: {overlapping_countries}")
+
+
+
+#Filtrar ambos os DataFrames para incluir apenas os dados dos países sobrepostos ('China', 'Taiwan' e 'Estados Unidos') para criar uma visão integrada básica das empresas que operam nas mesmas regiões.
+
+overlapping_countries = ['China', 'Taiwan', 'United States']
+
+# Filter df_superstore for overlapping countries
+df_superstore_integrated = df_superstore[df_superstore['country'].isin(overlapping_countries)].copy()
+
+# Filter df_empresas for overlapping countries
+df_empresas_integrated = df_empresas[df_empresas['País Final'].isin(overlapping_countries)].copy()
+
+print("Filtered df_superstore for overlapping countries:")
+display(df_superstore_integrated.head())
+
+print("\nFiltered df_empresas for overlapping countries:")
+display(df_empresas_integrated.head())
+
+
+
+
+
+#Filtre df_empresas_integratedpara incluir apenas os setores relevantes ('Eletrônicos' e 'Varejo') e então exiba o DataFrame resultante para identificar potenciais concorrentes que operam nos países sobrepostos.
+
+relevant_industries = ['Eletrônicos', 'Varejo']
+
+# Filter df_empresas_integrated to include only relevant industries
+df_relevant_competitors_integrated = df_empresas_integrated[
+    df_empresas_integrated['Indústria'].isin(relevant_industries)
+].copy()
+
+print("Potential competitors in overlapping countries based on relevant industries:")
+display(df_relevant_competitors_integrated)
+
+
+
+
+#Calcular as vendas totais da Superstore nos países sobrepostos a partir de df_superstore_integrated. Em seguida, calcular a receita total dos concorrentes relevantes nos países sobrepostos a partir de df_relevant_competitors_integrated. Por fim, apresentar e contextualizar esses valores, reconhecendo as limitações de uma comparação direta entre vendas e receita.
+
+superstore_total_sales_overlapping_countries = df_superstore_integrated['sales'].sum()
+
+print(f"Total Sales of Superstore in overlapping countries ('China', 'Taiwan', 'United States'): ${superstore_total_sales_overlapping_countries:,.2f}")
+
+# Calculate total revenue for relevant competitors in overlapping countries
+# We will sum the 'Receita (bilhões de USD)' for companies headquartered in the overlapping countries
+competitors_total_revenue_overlapping_countries = df_relevant_competitors_integrated[
+    df_relevant_competitors_integrated['País Final'].isin(overlapping_countries)
+]['Receita (bilhões de USD)'].sum() * 1_000_000_000 # Convert billions to absolute value
+
+print(f"\nTotal Revenue of Relevant Competitors (headquartered in overlapping countries): ${competitors_total_revenue_overlapping_countries:,.2f}")
+
+print("\nContextualizing the comparison:")
+print("It's important to note that Superstore's 'sales' represent revenue from its specific operations and product categories, likely over a certain period (based on the 'year' column, which goes up to 2014).")
+print("The competitors' 'Receita (bilhões de USD)' represents their total global revenue across all their business segments, likely for a specific fiscal year (the Wikipedia data seems to be from around 2015 based on the context of the largest companies list).")
+print("Therefore, this comparison provides a high-level sense of the scale of these multinational companies in the regions where Superstore operates, rather than a direct like-for-like comparison of competitive sales within Superstore's specific market.")
+

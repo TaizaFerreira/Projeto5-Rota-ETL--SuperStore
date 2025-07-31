@@ -1,0 +1,79 @@
+
+-- dim_cliente
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_cliente` AS
+SELECT
+  customer_ID AS customer_id,
+  customer_name
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+GROUP BY customer_ID, customer_name;
+
+
+-- dim_ship_mode
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_ship_mode` AS
+SELECT
+  GENERATE_UUID() AS ship_mode_id,
+  ship_mode
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE ship_mode IS NOT NULL
+GROUP BY ship_mode;
+
+-- dim_order_priority
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_order_priority` AS
+SELECT
+  GENERATE_UUID() AS order_priority_id,
+  order_priority
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE order_priority IS NOT NULL
+GROUP BY order_priority;
+
+
+-- dim_categoria
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_categoria` AS
+SELECT
+  GENERATE_UUID() AS category_id,
+  category,
+  sub_category
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE category IS NOT NULL AND sub_category IS NOT NULL
+GROUP BY category, sub_category;
+
+-- dim_mercado
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_mercado` AS
+SELECT
+  GENERATE_UUID() AS market_id,
+  market,
+  market2
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE market IS NOT NULL
+GROUP BY market, market2;
+
+
+-- dim_produto
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_produto` AS
+SELECT
+  product_id,
+  product_name
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE product_id IS NOT NULL AND product_name IS NOT NULL
+GROUP BY product_id, product_name;
+
+
+-- dim_região   
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_regiao` AS
+SELECT
+  GENERATE_UUID() AS region_id,
+  region
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE region IS NOT NULL
+GROUP BY region;
+
+
+-- dim_segmento
+CREATE OR REPLACE TABLE `projeto5-etl-superstore.Super_store_ETL.dim_segmento` AS
+SELECT
+  GENERATE_UUID() AS segment_id,
+  segment
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore_limpa`
+WHERE segment IS NOT NULL
+GROUP BY segment;
+

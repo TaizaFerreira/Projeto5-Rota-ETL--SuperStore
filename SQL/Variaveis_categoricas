@@ -1,0 +1,9 @@
+--verificação das variáveis categóricas
+SELECT DISTINCT TRIM(LOWER(ship_mode)) AS ship_mode_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(order_priority)) AS order_priority_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(segment)) AS segment_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(category)) AS category_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(sub_category)) AS sub_category_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(region)) AS region_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(country)) AS country_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;
+SELECT DISTINCT TRIM(LOWER(market)) AS market_clean FROM `projeto5-etl-superstore.Super_store_ETL.superstore`;

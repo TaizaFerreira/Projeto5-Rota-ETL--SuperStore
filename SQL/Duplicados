@@ -1,0 +1,58 @@
+-- verificação de valores duplicados
+SELECT
+  row_id,
+  order_id,
+  order_date,
+  ship_date,
+  ship_mode,
+  customer_ID,
+  customer_name,
+  segment,
+  city,
+  state,
+  country,
+  region,
+  market,
+  market2,
+  product_id,
+  category,
+  sub_category,
+  product_name,
+  sales,
+  quantity,
+  discount,
+  profit,
+  shipping_cost,
+  order_priority,
+  COUNT(*) AS qtd
+
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore`
+
+GROUP BY
+  row_id,
+  order_id,
+  order_date,
+  ship_date,
+  ship_mode,
+  customer_ID,
+  customer_name,
+  segment,
+  city,
+  state,
+  country,
+  region,
+  market,
+  market2,
+  product_id,
+  category,
+  sub_category,
+  product_name,
+  sales,
+  quantity,
+  discount,
+  profit,
+  shipping_cost,
+  order_priority
+
+HAVING qtd > 1
+ORDER BY qtd DESC;

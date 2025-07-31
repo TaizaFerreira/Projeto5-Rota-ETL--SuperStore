@@ -1,0 +1,7 @@
+
+-- verificação tipo de dado
+SELECT
+  order_date,
+  ship_date
+FROM `projeto5-etl-superstore.Super_store_ETL.superstore`
+LIMIT 5;

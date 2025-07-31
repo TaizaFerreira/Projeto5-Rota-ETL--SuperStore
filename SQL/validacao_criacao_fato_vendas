@@ -1,0 +1,14 @@
+
+--Validação da criação da tabela fato_vendas
+SELECT 
+  COUNT(*) AS total_linhas,
+  COUNT(DISTINCT order_id) AS pedidos_unicos,
+  COUNT(DISTINCT customer_id) AS clientes_relacionados,
+  COUNT(DISTINCT product_id) AS produtos_relacionados,
+  COUNT(DISTINCT ship_mode_id) AS tipos_envio,
+  COUNT(DISTINCT order_priority_id) AS niveis_prioridade,
+  COUNT(DISTINCT segment_id) AS segmentos,
+  COUNT(DISTINCT region_id) AS regioes,
+  COUNT(DISTINCT market_id) AS mercados,
+  COUNT(DISTINCT category_id) AS categorias
+FROM `projeto5-etl-superstore.Super_store_ETL.fato_vendas`;
