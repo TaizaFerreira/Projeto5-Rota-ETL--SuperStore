@@ -1,4 +1,4 @@
-***PROJETO 5 ROTA ETL SUPERSTORE***
+****PROJETO 5 ROTA ETL SUPERSTORE****
 
 
 1. OBJETIVO
@@ -25,8 +25,11 @@ Informações temporais (datas, semanas, ano)
 
 
 A estrutura variada da base permitiu a extração de insights estratégicos com qualidade.
+
 5. PROCESSAMENTO E PREPARAÇÃO DOS DADOS
+   
 Foram realizadas as seguintes análises:
+
 Valores nulos: Nenhuma ausência foi identificada.
 
 
@@ -40,6 +43,7 @@ Numéricas: Validação de tipos e faixas.
 
 
 Tipos de dados: Todos os campos foram ajustados corretamente entre texto, números e datas.
+
 
 6. INTEGRAÇÃO COM FONTES EXTERNAS
 Realizou-se uma integração via web scraping com dados da Wikipédia (lista das maiores empresas por receita), cruzando o setor e país com os dados da Super Store. Isso permitiu identificar potenciais concorrentes e contextos de atuação global.
@@ -58,6 +62,7 @@ dim_regiao, dim_mercado, dim_categoria, dim_order_priority, dim_cliente, dim_pro
 
 
 Cada dimensão possui um identificador único (ID), utilizado na tabela fato como chave estrangeira. Isso garante a integridade referencial e otimiza as consultas analíticas.
+
 
 8. VERIFICAÇÃO DE RELACIONAMENTOS
 Foram realizados JOINs no BigQuery entre a tabela fato e todas as tabelas de dimensão. O resultado confirmou que todos os relacionamentos estavam funcionando corretamente, sem retornos nulos, validando a estrutura e a integridade do modelo de dados.
